@@ -1,0 +1,154 @@
+<head>
+<title>ECS p5js Project</title>
+</head>
+<body style="background-color:mediumseagreen;">
+<h1 style="text-align:center;color:violet;font-family:Trebuchet MS">Commented Code</h1>
+<h2 style="color:white;"><i>Small Celebration; by Teresa</i></h2>
+<pre style="color:brown;"><h4>function draw() {
+<i>//Sets the color mode to RGB (red, green, blue)</i>
+  colorMode(RGB);
+<i>//Sets the bachground to the color black</i>
+  background(0, 0, 0, 25);
+<i>//This code helps with the percentages a firework show up; the probability</i>
+    if (random(1) < 0.03) {
+fireworks.push(new Firework());
+  }
+<i>//Makes a for loop that determines the firework's lenghth</i>
+  for (var i = fireworks.length - 1; i >= 0; i--) {
+    fireworks[i].update();
+    fireworks[i].show();
+    if (fireworks[i].done()) {
+      fireworks.splice(i, 1);
+    }
+  }
+}
+<i>//Makes a function named firework</i>
+function Firework() {
+<i>//Chooses a random color</i>
+  this.hu = random(255);
+<i>//Creates a particle</i>
+  this.firework = new Particle(random(width), height, this.hu, true);
+  this.exploded = false;
+  this.particles = [];
+<i>//Makes a function called done</i> 
+  this.done = function() {
+    if (this.exploded && this.particles.length === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+<i>//A function called update</i>
+  this.update = function() {
+    if (!this.exploded) {
+<i>//Carries fireworks up and makes them explode; this code makes the fireworks stop at a certain place</i>
+      this.firework.applyForce(gravity);
+      this.firework.update();   
+      if (this.firework.vel.y >= 0) {
+        this.exploded = true;
+        this.explode();
+      }
+    }
+    for (var i = this.particles.length - 1; i >= 0; i--) {
+      this.particles[i].applyForce(gravity);
+      this.particles[i].update();
+      
+      if (this.particles[i].done()) {
+        this.particles.splice(i, 1);
+      }
+    }
+  }
+<i>//Makes a function called explode, which makes the fireworks burst out in the 'sky'</i>
+  this.explode = function() {
+<i>//This creates a for loop which determines the amount of sparks (currently 100) that will burst from a firework</i>
+    for (var i = 0; i < 100; i++) {
+      var p = new Particle(this.firework.pos.x, this.firework.pos.y, this.hu, false);
+      this.particles.push(p);
+    }
+  }
+<i>//Makes function called show</i>
+  this.show = function() {
+    if (!this.exploded) {
+      this.firework.show();
+    }
+    for (var i = 0; i < this.particles.length; i++) {
+      this.particles[i].show();
+    }
+  }
+}
+function Particle(x, y, hu, firework) {
+  this.pos = createVector(x, y);
+  this.firework = firework;
+  this.lifespan = 255;
+  this.hu = hu;
+  this.acc = createVector(0, 0);
+    if (this.firework) {
+<i>//This code gives the firework range of heights it can reach and the direction it moves</i>
+    this.vel = createVector(random(-4, 4), random(-8, -20));
+  } else {
+    this.vel = p5.Vector.random2D();
+<i>//This line of code gives a range to fow far the small firework particles would spread out</i>
+    this.vel.mult(random(16, 20));
+  }
+ 
+  this.applyForce = function(force) {
+    this.acc.add(force);
+  }
+
+  this.update = function() {
+    if (!this.firework) {
+      this.vel.mult(0.9);
+<i>//This line of code determines how long a firework will remain visible until it disappears (it deletes the frames of fireworks)</i>
+      this.lifespan -= 4;
+    }
+    
+    this.vel.add(this.acc);
+    this.pos.add(this.vel);
+    this.acc.mult(0);
+  }
+
+  this.done = function() {
+    if (this.lifespan < 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  this.show = function() {
+    colorMode(HSB);
+    if (!this.firework) {
+<i>//The strokeweight sets the thickness of the exploded particles of the firework</i>
+      strokeWeight(5);
+<i>//This line below sets the exploding particle's colors</i>
+      stroke(hu, random(255), random(255), this.lifespan);
+    } else {
+<i>//The stroke weight here refers to the shooting up part of the firework; it sets its thickness</i>
+      strokeWeight(6);
+<i>//This sets the firework's color (the part shooting up)</i>
+      stroke(hu, random(255), random(255));
+    }
+<i>//This determines the direction in which an exploded firework would fall: up, down, left, right...</i>
+    point(this.pos.x, this.pos.y);
+  }
+}
+<i>//makes a variable called fireworks which have an empty set</i>
+var fireworks = [];
+<i>//Makes a variable called gravity</i>
+var gravity;
+function setup() {
+<i>//Makes the canvas's size(the frame)</i>
+  createCanvas(1350, 700);
+<i>//Sets color mode to HSB(hue, saturation, and brightness)</i>
+  colorMode(HSB);
+<i>//Since this code includes the word gravity, you can tell it is related to such;</i> 
+<i>//It is like a force of gravity acting on the fireworks: the more gravity, the less high the fireworks shoot</i>
+  gravity = createVector(0, 0.2);
+  stroke(255);
+  strokeWeight(4);
+  background(0);
+}
+</h4></pre>
+
+
+</body>
+
